@@ -1,0 +1,35 @@
+﻿@model SV21T1020578.DomainModels.Shipper
+@{
+    ViewBag.Title = "Xóa người giao hàng";
+}
+
+<div class="box box-danger">
+    <div class="box-body">
+        <form action="~/Shipper/Delete/@Model.ShipperID" method="post">
+            <div class="form-group">
+                <label>Tên người giao hàng:</label>
+                <p class="form-control-static">@Model.ShipperName</p>
+            </div>
+
+            <div class="form-group">
+                <label>Điện thoại:</label>
+                <p class="form-control-static">@Model.Phone</p>
+            </div>
+
+            <div class="form-group text-right">
+                @if (!SV21T1020578.BusinessLayers.CommonDataService.ShipperDB.InUsed(Model.ShipperID))
+                {
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                        Xóa dữ liệu
+                    </button>
+                }
+                <a href="~/Shipper" class="btn btn-default">
+                    Quay lại
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>

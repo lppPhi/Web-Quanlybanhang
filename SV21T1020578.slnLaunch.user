@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "SV21T1020578.Admin\\SV21T1020578.Admin.csproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "SV21T1020578.Shop\\SV21T1020578.Shop.csproj",
+        "Action": "StartWithoutDebugging"
+      }
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+﻿@model SV21T1020578.DomainModels.Shipper
+@{
+    ViewBag.Title = "Bổ sung thông tin người giao hàng";
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+        <form action="~/Shipper/SaveData" method="post">
+            <div class="form-group">
+                <label>Tên người giao hàng:</label>
+                @Html.TextBoxFor(m => m.ShipperName, new { @class = "form-control", autofocus = "autofocus" })
+            </div>
+
+            <div class="form-group">
+                <label>Điện thoại:</label>
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control"})
+            </div>
+
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-floppy-o"></i>
+                    Lưu dữ liệu
+                </button>
+                <a href="~/Shipper" class="btn btn-default">
+                    Quay lại
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>

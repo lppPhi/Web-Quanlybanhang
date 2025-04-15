@@ -1,0 +1,78 @@
+﻿@model SV21T1020578.Admin.Models.OrderSearchInput
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+        <!--Form đầu vào tìm kiếm-->
+        <form id="searchInput" action="~/Order/Search" method="get">
+
+            <input type="hidden" name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+            <div class="row container-fluid">
+                <div class="col-sm-2">
+                    <select class="form-control" name="@nameof(Model.Status)">
+                        <option value="">-- Trạng thái --</option>
+                        <option value="1">Đơn hàng mới (chờ duyệt)</option>
+                        <option value="2">Đơn hàng đã duyệt (chờ chuyển hàng)</option>
+                        <option value="3">Đơn hàng đang được giao</option>
+                        <option value="4">Đơn hàng đã hoàn tất thành công</option>
+                        <option value="-1">Đơn hàng bị hủy</option>
+                        <option value="-2">Đơn hàng bị từ chối</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" name="@nameof(Model.TimeRange)" class="form-control daterange-picker" placeholder="" value="@Model.TimeRange" />
+                </div>
+                <div class="col-sm-8 input-group">
+                    <input type="text" name="searchValue"
+                           class="form-control"
+                           placeholder="Tìm kiếm theo tên khách hàng hoặc tên người giao hàng"
+                           name="@nameof(Model.SearchValue)"
+                           value="@Model.SearchValue" />
+                    <span class="input-group-btn">
+                        <button type="submit" id="search-btn" class="btn btn-flat btn-info">
+                            <i class="fa fa-search"></i> Tìm kiếm
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </form>
+
+        <!--Hiển thị kết quả tìm kiếm dữ liệu-->
+        <div id="searchOutput">
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        //Gửi yêu cầu từ form searchInput đến Search để lấy dữ liệu của trang page
+        function paginationSearch(page) {
+
+            var condition = $("#searchInput").serializeArray();
+            condition.push({ name: "page", value: page });
+
+            var action = $("#searchInput").prop("action");
+            var method = $("#searchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: condition,
+                success: function (data) {
+                    $("#searchOutput").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            paginationSearch(@Model.Page);
+            $("#searchInput").submit(function (e) {
+                e.preventDefault();
+                paginationSearch(1);
+            })
+        })
+
+    </script>
+}

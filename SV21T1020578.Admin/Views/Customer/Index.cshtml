@@ -1,0 +1,60 @@
+﻿@model SV21T1020578.Admin.Models.PaginationSearchInput
+@{
+    ViewBag.Title = "Quản lý Khách hàng";
+}
+<div class="box box-primary">
+    <div class="box-body">
+        <!-- Form để nhập đầu vào tìm kiếm -->
+        <form id = "searchInput" action="~/Customer/Search" method="get">
+            @Html.HiddenFor(m => m.PageSize)
+            <div class="input-group">
+                @Html.TextBoxFor(m => m.SearchValue, new { @class = "form-control", placeholder = "Nhập tên khách hàng cần tìm", autofocus = "autofocus" })
+                <div class="input-group-btn">
+                    <button class="btn btn-info" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+
+                    <a href="~/Customer/Create" class="btn btn-primary" style="margin-left:5px">
+                        <i class="fa fa-plus"></i> Bổ sung
+                    </a>
+                </div>
+            </div>
+        </form>
+
+        <!-- Hiển thị dữ liệu -->
+        <div id = "searchOutput"></div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        //Gửi yêu cầu từ form searchInput đến Search để lấy dữ liệu của trang page
+        function paginationSearch(page) {
+
+            var condition = $("#searchInput").serializeArray();
+            condition.push({ name: "page", value: page });
+
+            var action = $("#searchInput").prop("action");
+            var method = $("#searchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: condition,
+                success: function (data) {
+                    $("#searchOutput").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            paginationSearch(@Model.Page);
+            $("#searchInput").submit(function (e) {
+                e.preventDefault();
+                paginationSearch(1);
+            })
+        })
+
+    </script>
+}

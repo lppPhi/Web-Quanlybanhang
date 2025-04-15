@@ -1,0 +1,194 @@
+﻿@model SV21T1020578.DomainModels.Product
+@{
+
+}
+
+<div class="box box-primary">
+
+    <div class="box-header with-border ">
+        <h3 class="box-title">Thông tin mặt hàng</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="box-body">
+        <form class="form-horizontal" action="Product/SaveData" method="post" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Tên mặt hàng:</label>
+                @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control", @autufocus = "autofocus" })
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Mô tả:</label>
+                @Html.TextAreaFor(m => m.ProductDescription, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Loại hàng:</label>
+                @Html.DropDownListFor(m => m.CategoryID, SelectListHeper.Categories(), new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Nhà cung cấp:</label>
+                @Html.DropDownListFor(m => m.SupplierID, SelectListHeper.Suppliers(), new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Đơn vị tính:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Giá hàng:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="true" checked>Hiện đang được bán</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Ảnh minh họa:</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" accept="image/*"
+                           onchange="document.getElementById('Photo').src = window.URL.createObjectURL(this.files[0])" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <img id="Photo" src="~/images/products/macbook.png" class="img img-bordered" style="width:200px" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-save"></i> Lưu dữ liệu
+                    </button>
+                    <a class="btn btn-warning" href="~/Product">
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="box box-info">
+    <div class="box-header with-border ">
+        <h3 class="box-title">Thư viện ảnh</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr class="bg-gray">
+                    <th>Ảnh</th>
+                    <th>Mô tả/tiêu đề</th>
+                    <th>Thứ tự hiển thị</th>
+                    <th>Ẩn ảnh</th>
+                    <th class="text-right">
+                        <a class="btn btn-xs btn-primary" href="~/Product/Photo/123?method=add">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= 3; i++)
+                {
+                    <tr>
+                        <td style="vertical-align:middle">
+                            <img src="~/Images/Products/macbook.png" alt="MacBookPro" style="width:100px" />
+                        </td>
+                        <td style="vertical-align:middle;">
+                            MacBook Pro M2 15" - 2023
+                        </td>
+                        <td style="vertical-align:middle;">@i</td>
+                        <td style="vertical-align:middle;"></td>
+                        <td style="vertical-align:middle; text-align:right">
+                            <a class="btn btn-xs btn-primary" href="~/Product/Photo/123?method=edit&photoId=456">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a class="btn btn-xs btn-danger" href="~/Product/Photo/123?method=delete&photoId=456" onclick="return confirm('Xóa ảnh của mặt hàng hay không?')">
+                                <i class="fa fa-remove"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="box box-info">
+
+    <div class="box-header with-border ">
+        <h3 class="box-title">Thuộc tính của mặt hàng</h3>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr class="bg-gray">
+                    <th>Tên thuộc tính</th>
+                    <th>Giá trị thuộc tính</th>
+                    <th>Thứ tự hiển thị</th>
+                    <th class="text-right">
+                        <a class="btn btn-xs btn-primary" href="~/Product/Attribute/123?method=add">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <tr>
+                        <td style="vertical-align:middle">CPU</td>
+                        <td style="vertical-align:middle;">Intel Core i5 3337U 1.8GHz</td>
+                        <td style="vertical-align:middle;">1</td>
+                        <td style="vertical-align:middle; text-align:right">
+                            <a class="btn btn-xs btn-primary" href="~/Product/Attribute/123?method=edit&attributeId=456">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a class="btn btn-xs btn-danger" href="~/Product/Attribute/123?method=delete&attributeId=456" onclick="return confirm('Xóa thuộc tính này của mặt hàng?')">
+                                <i class="fa fa-remove"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="box-footer text-center">
+    </div>
+
+</div>
+

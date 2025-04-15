@@ -1,0 +1,33 @@
+﻿@model SV21T1020578.DomainModels.Category
+@{
+    ViewBag.Title = "Bổ sung thông tin loại hàng";
+}
+<div class="box box-primary">
+    <div class="box-body">
+        <form action="~/Category/SaveData" method="post">
+            <div class="form-group">
+                <label>Tên loại hàng:</label>
+                @Html.TextBoxFor(m => m.CategoryName, new { @class = "form-control", autofocus = "autofocus" })
+
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả:</label>
+                @Html.TextBoxFor(m => m.Description, new { @class = "form-control"})
+
+            </div>
+
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-floppy-o"></i>
+                    Lưu dữ liệu
+                </button>
+                <a href="~/Category" class="btn btn-default">
+                    Quay lại
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>

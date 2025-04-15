@@ -1,0 +1,74 @@
+﻿@model SV21T1020578.DomainModels.ProductPhoto
+@{
+
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+        <form class="form-horizontal" method="post" enctype="multipart/form-data" action="~/Product/SavePhoto">
+
+            <input type="hidden" name="ProductID" value="@Model.ProductID" />
+            <input type="hidden" name="PhotoID" value="@Model.PhotoID" />
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Chọn file ảnh:</label>
+                <div class="col-sm-10">
+                    <input type="hidden" name="@nameof(Model.Photo)" value="@Model.Photo" />
+                    <input type="file"
+                           name="uploadPhoto"
+                           class="form-control"
+                           accept="image/*"
+                           onchange="document.getElementById('Photo').src = window.URL.createObjectURL(this.files[0])" />
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <input type="hidden" value="photo.png" />
+                    <img id="Photo" src="~/images/products/@Model.Photo" class="img img-bordered" style="width:200px" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Mô tả:</label>
+
+                <div class="col-sm-10">
+                    <input type="text" name="@nameof(Model.Description)" value="@Model.Description" class="form-control" />
+                    <span class="text-danger">@Html.ValidationMessageFor(m => m.Description)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Thứ tự hiển thị:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="@nameof(Model.DisplayOrder)" value="@Model.DisplayOrder" class="form-control" />
+                    <span class="text-danger">@Html.ValidationMessageFor(m => m.DisplayOrder)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="@nameof(Model.IsHidden)" value="true" /> Không hiển thị ảnh
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-floppy-o"></i>
+                        Lưu dữ liệu
+                    </button>
+                    <a href="~/Product/Edit/@Model.ProductID" class="btn btn-default">
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>

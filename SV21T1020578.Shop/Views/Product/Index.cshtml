@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+}
+<div class="container my-4">
+
+    <!-- Div có viền bao quanh toàn bộ form tìm kiếm -->
+    <div class="border p-3 rounded" style="background-color:#fff;">
+        <h2 class="text-center mb-4 ">Bộ Lộc Sản Phẩm</h2>
+        <form action="~/Product/Search" method="get" id="frmSearchInput">
+            <input type="hidden" name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+
+            <div class="row">
+
+                <div class="col-sm-2">
+                    <label>Loại hàng:</label>
+                    <select class="form-control" name="@nameof(Model.CategoryID)">
+                        <option value="">Chọn loại hàng</option>
+                        @foreach (var item in CommonDataService.CategoryDB.List())
+                        {
+                            if (item.CategoryID == Model.CategoryID)
+                            {
+                                <option selected value="@item.CategoryID">@item.CategoryName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.CategoryID">@item.CategoryName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-2 ">
+                    <label>Nhà cung cấp:</label>
+                    <select class="form-control" name="@nameof(Model.SupplierID)">
+                        <option value="">Chọn nhà cung cấp</option>
+                        @foreach (var item in CommonDataService.SupplierDB.List())
+                        {
+                            if (item.SupplierID == Model.SupplierID)
+                            {
+                                <option selected value="@item.SupplierID">@item.SupplierName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.SupplierID">@item.SupplierName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <label>Giá từ:</label>
+                    <input type="text" class="form-control number-separator tooltip-price" name="@nameof(Model.MinPrice)" value="@Model.MinPrice" min="0" />
+                </div>
+                <div class="col-sm-2">
+                    <label>Đến:</label>
+                    <input type="text" class="form-control number-separator tooltip-price" name="@nameof(Model.MaxPrice)" value="@Model.MaxPrice" min="0" />
+                </div>
+                <div class="col-sm-3">
+                    <label>Tên mặt hàng cần tìm:</label>
+                    <!-- Div có viền cho ô tìm kiếm -->
+                    <div class="input-group d-flex align-items-center">
+                        <input name="@nameof(Model.SearchValue)" type="text" class="form-control" placeholder="Nhập mặt hàng cần tìm" value="@Model.SearchValue" />
+                        <div class="input-group-append">
+                            <button class="btn btn-info" style="margin-left: 258px; margin-top: -56px;" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <div id="searchResult"></div>
+</div>
+
+
+@section scripts {
+    <script>
+        function doSearch(page) {
+            var searchCondition = $("#frmSearchInput").serializeArray();
+            searchCondition.push({ name: "page", value: page });
+
+            var action = $("#frmSearchInput").prop("action");
+            var method = $("#frmSearchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: searchCondition,
+                success: function (data) {
+                    $("#searchResult").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            doSearch(@Model.Page);
+            $("#frmSearchInput").submit(function (e) {
+                e.preventDefault();
+                doSearch(1);
+            });
+        });
+    </script>
+}

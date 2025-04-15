@@ -1,0 +1,220 @@
+﻿@model SV21T1020578.Admin.Models.OrderDetaiModel
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+}
+
+<div class="box box-primary">
+    <div class="box-header text-right">
+
+        <div class="btn-group">
+            <div class="btn-group">
+                @if (Model.Order.Status != SV21T1020578.DomainModels.Constants.ORDER_FINISHED
+                && Model.Order.Status != SV21T1020578.DomainModels.Constants.ORDER_CANCEL
+                && Model.Order.Status != SV21T1020578.DomainModels.Constants.ORDER_REJECTED)
+                {
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                        Xử lý đơn hàng <span class="caret"></span>
+                    </button>
+                }
+                <ul class="dropdown-menu" role="menu">
+                    @if(Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_INIT)
+                    {
+                        <li><a href="~/Order/Accept/@Model.Order.OrderID" onclick="return confirm('Xác nhận duyệt chấp nhận đơn hàng này?')">Duyệt đơn hàng</a></li>
+                    }
+                    @if (Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_ACCEPTED || Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_SHIPPING)
+                    {
+                        <li><a href="~/Order/Shipping/@Model.Order.OrderID" class="btn-modal">Chuyển giao hàng</a></li>
+                    }
+                    @if (Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_ACCEPTED || Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_SHIPPING)
+                    {
+                        <li><a href="~/Order/Finish/@Model.Order.OrderID" onclick="return confirm('Xác nhận đơn hàng đã hoàn tất thành công?')">Xác nhận hoàn tất đơn hàng</a></li>
+                    }
+                    
+                    <li class="divider"></li>
+                    @if (Model.Order.Status != SV21T1020578.DomainModels.Constants.ORDER_FINISHED)
+                    {
+                        <li><a href="~/Order/Cancel/@Model.Order.OrderID" onclick="return confirm('Xác nhận hủy đơn hàng này?')">Hủy đơn hàng</a></li>
+                    }
+                    @if (Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_INIT)
+                    {
+                        <li><a href="~/Order/Reject/@Model.Order.OrderID" onclick="return confirm('Xác nhận từ chối đơn hàng này?')">Từ chối đơn hàng</a></li>
+                    }
+                    
+                </ul>
+            </div>
+            @if (Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_CANCEL || Model.Order.Status == SV21T1020578.DomainModels.Constants.ORDER_REJECTED)
+            {
+                <a href="~/Order/Delete/@Model.Order.OrderID" class="btn btn-sm btn-danger" onclick="return confirm('Có chắc chắn muốn xóa đơn hàng này không?')"><i class="fa fa-trash"></i> Xóa đơn hàng</a>      
+            }
+            <a href="~/Order" class="btn btn-sm btn-info">Quay lại</a>
+        </div>
+    </div>
+
+    <div class="box-body form-horizontal">
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-warning alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @ViewBag.Message
+            </div>
+        }
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Mã đơn hàng:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@Model.Order.OrderID</p>
+            </div>
+            <label class="control-label col-sm-2">Ngày lập đơn hàng:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@string.Format(new System.Globalization.CultureInfo("en-GB"), "{0:dd/MM/yyyy HH:mm}", Model.Order.OrderTime)</p>
+            </div>
+            <label class="control-label col-sm-2">Nhân viên phụ trách:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@Model.Order.EmployeeName</p>
+            </div>
+            <label class="control-label col-sm-2">Ngày nhận đơn hàng:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@string.Format(new System.Globalization.CultureInfo("en-GB"), "{0:dd/MM/yyyy HH:mm}", Model.Order.AcceptTime)</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Khách hàng:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@Model.Order.CustomerName</p>
+            </div>
+            <label class="control-label col-sm-2">Tên giao dịch:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@Model.Order.CustomerContactName</p>
+            </div>
+            <label class="control-label col-sm-2">Địa chỉ:</label>
+            <div class="col-sm-10">
+                <p class="form-control">@Model.Order.CustomerAddress</p>
+            </div>
+            <label class="control-label col-sm-2">Email:</label>
+            <div class="col-sm-10">
+                <p class="form-control">@Model.Order.CustomerEmail</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Địa chỉ giao hàng:</label>
+            <div class="col-sm-10">
+                <p class="form-control">@Model.Order.DeliveryAddress</p>
+            </div>
+            <label class="control-label col-sm-2">Tỉnh/thành:</label>
+            <div class="col-sm-10">
+                <p class="form-control">@Model.Order.DeliveryProvince</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Người giao hàng:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@Model.Order.ShipperName</p>
+            </div>
+            <label class="control-label col-sm-2">Điện thoại:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@Model.Order.ShipperPhone</p>
+            </div>
+            <label class="control-label col-sm-2">Nhận giao hàng lúc:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@string.Format(new System.Globalization.CultureInfo("en-GB"), "{0:dd/MM/yyyy HH:mm}", Model.Order.ShippedTime)</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Trạng thái đơn hàng:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@Model.Order.StatusDescription</p>
+            </div>
+            <label class="control-label col-sm-2">Thời điểm hoàn tất:</label>
+            <div class="col-sm-4">
+                <p class="form-control">@string.Format(new System.Globalization.CultureInfo("en-GB"), "{0:dd/MM/yyyy HH:mm}", Model.Order.FinishedTime)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="box-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <caption><h4>Danh sách mặt hàng thuộc đơn hàng</h4></caption>
+                <thead>
+                    <tr class="bg-primary">
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Tên hàng</th>
+                        <th class="text-center">ĐVT</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-center">Giá</th>
+                        <th class="text-center">Thành tiền</th>
+
+                        <th style="width:80px"></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int stt = 0;
+                        decimal summAll = 0;
+                    }
+
+                    @foreach (var item in Model.Details)
+                    {
+                        stt += 1;
+                        summAll += item.TotalPrice;
+
+                        <tr>
+                            <td class="text-center">@stt</td>
+                            <td>@item.ProductName</td>
+                            <td class="text-center">@item.Unit</td>
+                            <td class="text-center">@item.Quantity</td>
+                            <td class="text-right">@string.Format("{0:N0}", item.SalePrice)</td>
+                            <td class="text-right">@string.Format("{0:N0}", item.TotalPrice)</td>
+                            <td class="text-right">
+                                <a href="~/Order/EditDetail/@item.OrderID?productId=@item.ProductID" class="btn btn-xs btn-primary btn-modal">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="~/Order/DeleteDetail/@item.OrderID?productId=@item.ProductID" class="btn btn-xs btn-danger" onclick="return confirm('Xóa mặt hàng này khỏi đơn hàng?')">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5" class="text-right">Tổng cộng:</th>
+                        <th class="text-right">@string.Format("{0:N0}", summAll)</th>
+
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="dialogModal" class="modal fade" role="dialog">
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".btn-modal").click(function (e) {
+                e.preventDefault();
+                var link = $(this).prop("href");
+                $.ajax({
+                    url: link,
+                    type: "GET",
+                    error: function () {
+                        alert("Your request is not valid!");
+                    },
+                    success: function (data) {
+                        $("#dialogModal").empty();
+                        $("#dialogModal").html(data);
+                        $("#dialogModal").modal();
+                    }
+                });
+            });
+        })
+    </script>
+}

@@ -1,0 +1,80 @@
+﻿@model SV21T1020578.Admin.Models.ProductSearchInput
+@{
+    ViewBag.Title = "Quản lý mặt hàng";
+}
+<div class="box box-primary">
+    <div class="box-body">
+        <!-- Form đầu vào tìm kiếm -->
+        <form id="searchInput" action="/Product/Search" method="get">
+            @Html.HiddenFor(m => m.PageSize)
+            <div class="row">
+                <div class="col-sm-3">
+                    <label>Loại hàng:</label>
+                    @Html.DropDownListFor(m => m.CategoryID, SelectListHeper.Categories(), new { @class = "select2" })
+                </div>
+                <div class="col-sm-3">
+                    <label>Nhà cung cấp:</label>
+                    @Html.DropDownListFor(m => m.SupplierID, SelectListHeper.Suppliers(), new { @class = "select2" })
+                </div>
+                <div class="col-sm-1">
+                    <label>Giá từ:</label>
+                    <input type="text" class="inputmask-number" name="@nameof(Model.MinPrice)" value="@Model.MinPrice">
+                </div>
+                <div class="col-sm-1">
+                    <label>đến:</label>
+                    <input type="text" class="inputmask-number" name="@nameof(Model.MaxPrice)" value="@Model.MaxPrice">
+                </div>
+                <div class="col-sm-4">
+                    <label>Tên mặt hàng cần tìm:</label>
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.SearchValue, new { @class = "form-control", placeholder = "Nhập mặt hàng cần tìm", autofocus = "autofocus" })
+
+                        <div class="input-group-btn">
+                            <button class="btn btn-info" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                            <a href="/Product/Create" class="btn btn-primary" style="margin-left:5px">
+                                <i class="fa fa-plus"></i> Bổ sung
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Hiển thị dữ liệu -->
+        <div id="searchOutput"></div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        //Gửi yêu cầu từ form searchInput đến Search để lấy dữ liệu của trang page
+        function paginationSearch(page) {
+
+            var condition = $("#searchInput").serializeArray();
+            condition.push({ name: "page", value: page });
+
+            var action = $("#searchInput").prop("action");
+            var method = $("#searchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: condition,
+                success: function (data) {
+                    $("#searchOutput").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            paginationSearch(@Model.Page);
+            $("#searchInput").submit(function (e) {
+                e.preventDefault();
+                paginationSearch(1);
+            })
+        })
+
+    </script>
+}
+

@@ -1,0 +1,64 @@
+﻿@model SV21T1020578.DomainModels.OrderDetail
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form action="~/Order/UpdateDetail" method="post" class="form-horizontal">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật chi tiết đơn hàng</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="hidden" name="OrderDetailID" value="@Model.OrderID" />
+                    <input type="hidden" name="OrderID" value="@Model.OrderID" />
+                    <input type="hidden" name="ProductID" value="@Model.ProductID" />
+                    <label class="control-label col-sm-3">Tên mặt hàng:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="@Model.ProductName" name="ProductName" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Đơn vị tính:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="@Model.Unit" name="Unit" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Số lượng:</label>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" value="@Model.Quantity" name="Quantity" min="1" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Giá bán:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control number-separator" value="@Model.SalePrice" name="SalePrice" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-floppy-o"></i> Cập nhật
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Bỏ qua
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.number-separator').inputmask({
+            alias: "numeric",
+            groupSeparator: ",",       // Dấu phẩy phân cách phần nghìn
+            autoGroup: true,           // Tự động thêm dấu phân cách
+            digits: 0,                 // Không có chữ số thập phân
+            rightAlign: false,         // Không căn phải
+            removeMaskOnSubmit: true   // Loại bỏ ký tự phân cách phần nghìn khi submit form
+        });
+    });
+</script>

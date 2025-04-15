@@ -1,0 +1,74 @@
+﻿@model SV21T1020578.DomainModels.Employee
+@{
+    ViewBag.Title = "Xóa nhân viên";
+}
+<div class="box box-danger">
+    <div class="box-body">
+        <form class="form-horizontal" action="~/Employee/Delete/@Model.EmployeeID" method="post">
+            <div class="form-group">
+                <label class="control-label col-sm-2">Họ và tên:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.FullName</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Ngày sinh:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.BirthDate</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Địa chỉ:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Address</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Điện thoại:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Phone</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Email:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Email</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Trạng thái:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.IsWorking</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <img id="Photo" src="~/images/products/nophoto.png" class="img img-bordered" style="width:200px">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    @if (!SV21T1020578.BusinessLayers.CommonDataService.EmployeeDB.InUsed(Model.EmployeeID))
+                    {
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                            Xóa dữ liệu
+                        </button>
+                    }
+                    <a href="/Employee" class="btn btn-default">
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>

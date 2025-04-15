@@ -1,0 +1,62 @@
+﻿@model PaginationSearchOutput<SV21T1020578.DomainModels.Supplier>
+@{
+    Layout = null;
+}
+<div>
+            <p style="margin:10px 0 10px 0">
+                Có <strong>@Model.RowCount</strong> nhà cung cấp trong tổng số <strong>@Model.PageCount</strong> trang
+            </p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr class="bg-primary">
+                            <th>Tên nhà cung cấp</th>
+                            <th>Tên giao dịch</th>
+                            <th>Điện thoại</th>
+                            <th>Email</th>
+                            <th>Địa chỉ</th>
+                            <th>Tỉnh/thành</th>
+                            <th style="width:80px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Data)
+                        {
+                            <tr>
+                                <td>@item.SupplierName</td>
+                                <td>@item.ContactName</td>
+                                <td>@item.Phone</td>
+                                <td>@item.Email</td>
+                                <td>@item.Address</td>
+                                <td>@item.Province</td>
+                                <td class="text-right">
+                                    <a href="~/Supplier/Edit/@item.SupplierID" class="btn btn-xs btn-info">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="~/Supplier/Delete/@item.SupplierID" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-remove"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center">
+                <ul class="pagination">
+                    @for (int p = 1; p <= Model.PageCount; p++)
+                    {
+                        if (p == Model.Page)
+                        {
+                            <li class="active"><a href="#">@p</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="javascript:;" onclick="paginationSearch(@p)">@p</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>

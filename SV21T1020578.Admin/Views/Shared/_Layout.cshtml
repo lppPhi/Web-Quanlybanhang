@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Capi Shop</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/Themes/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Themes/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Themes/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/themes/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="~/themes/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="~/themes/bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="~/Themes/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="~/Themes/dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    @RenderSection("styles", false)
+</head>
+<body class="hold-transition fixed sidebar-mini skin-blue">
+    <div class="wrapper">
+        @{
+            await Html.RenderPartialAsync("_Header");
+            await Html.RenderPartialAsync("_SideBar");
+        }
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>
+                    @ViewBag.Title
+                </h1>
+            </section>
+            <section class="content">
+                @RenderBody()
+            </section>
+        </div>
+        @{
+            await Html.RenderPartialAsync("_Footer");
+        }
+    </div>
+    <script src="~/Themes/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="~/Themes/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/Themes/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/Themes/bower_components/fastclick/lib/fastclick.js"></script>
+    <script src="~/themes/bower_components/moment/min/moment.min.js"></script>
+    <script src="~/themes/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/themes/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/themes/bower_components/select2/dist/js/select2.min.js"></script>
+    <script src="~/themes/bower_components/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <script src="~/Themes/dist/js/adminlte.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.sidebar-menu').tree();
+            $('.date-picker').datepicker({
+                autoclose: true,
+                format: "dd/mm/yyyy"
+            });
+            $('.daterange-picker').daterangepicker({
+                locale: {
+                    format: 'DD/MM/YYYY'
+                }
+            });
+            $('.select2').select2();
+            $('.inputmask-number').inputmask({
+                alias: "numeric",
+                groupSeparator: ",",       // Dấu phẩy phân cách phần nghìn
+                autoGroup: true,           // Tự động thêm dấu phân cách
+                digits: 0,                 // Không có chữ số thập phân
+                rightAlign: false,
+                removeMaskOnSubmit: true   // Loại bỏ ký tự phân cách phần nghìn khi submit form
+            });
+        })
+    </script>
+    @RenderSection("scripts", false)
+</body>
+</html>

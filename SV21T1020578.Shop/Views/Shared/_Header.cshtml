@@ -1,0 +1,430 @@
+﻿@{
+    // Giữ nguyên logic lấy thông tin user và URL hiện tại
+    var userData = User.GetUserData();
+    var currentUrl = Url.ActionContext.HttpContext.Request.Path;
+    var controller = Url.ActionContext.RouteData.Values["controller"]?.ToString();
+    var action = Url.ActionContext.RouteData.Values["action"]?.ToString();
+
+    // Hàm tiện ích để kiểm tra active (có thể đặt ở chỗ khác nếu muốn)
+    Func<string, string, bool> IsActive = (c, a) =>
+    {
+        if (string.IsNullOrEmpty(c)) return false; // Cần controller
+        if (controller.Equals(c, StringComparison.OrdinalIgnoreCase))
+        {
+            if (string.IsNullOrEmpty(a)) return true; // Chỉ cần khớp controller
+            return action.Equals(a, StringComparison.OrdinalIgnoreCase); // Khớp cả controller và action
+        }
+        return false;
+    };
+
+    // Hoặc kiểm tra dựa trên Path nếu bạn thích cách cũ hơn
+    Func<string, bool> IsActivePath = (path) => currentUrl.Equals(path, StringComparison.OrdinalIgnoreCase);
+
+}
+
+<header class="main-header-search-focus">
+    <div class="container">
+        <div class="header-content-wrapper">
+            <!-- Logo -->
+            <a href="~/Home" class="header-logo">
+                @* Thay bằng thẻ img nếu bạn có logo dạng ảnh *@
+                @* <img src="~/images/your-logo.png" alt="Capi Shop Logo"> *@
+                Capi Shop
+            </a>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <a href="~/Order/ShoppingCart" class="action-link">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>Giỏ hàng</span>
+                </a>
+
+                @if (userData != null)
+                {
+                    <div class="dropdown user user-menu action-link-wrapper">
+                        <a href="#" class="action-link dropdown-toggle-modern" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user"></i>
+                            @* Có thể hiển thị tên user thay vì "Tài khoản" nếu muốn *@
+                            @* <span>@userData.DisplayName</span> *@
+                            <span>Tài khoản</span>
+                            @* <i class="fa fa-caret-down dropdown-caret-small"></i> *@
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <!-- User Header -->
+                            <li class="user-header-modern">
+                                <i class="fa fa-user-circle user-avatar"></i>
+                                <p>@userData.DisplayName</p>
+                            </li>
+                            <!-- Menu Body (Optional - Thêm link profile ở đây nếu muốn) -->
+                            <li class="user-body-modern">
+                                <a href="~/Customer/Profile" class="btn btn-flat-modern">
+                                    <i class="fa fa-address-card"></i> Thông tin cá nhân
+                                </a>
+                                <a href="~/Order" class="btn btn-flat-modern">
+                                    <i class="fa fa-history"></i> Lịch sử đơn hàng
+                                </a>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer-modern">
+                                <div class="footer-left">
+                                    <a href="~/Account/ChangePassword" class="btn btn-outline-modern">
+                                        <i class="fa fa-key"></i> Đổi mật khẩu
+                                    </a>
+                                </div>
+                                <div class="footer-right">
+                                    <a href="~/Account/Logout" class="btn btn-outline-modern">
+                                        <i class="fa fa-sign-out-alt"></i> Thoát
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a href="~/Account/Login" class="action-link">
+                        <i class="fa fa-user"></i>
+                        <span>Tài khoản</span>
+                    </a>
+                    @* Hoặc bạn có thể hiển thị 2 nút Đăng nhập/Đăng ký riêng nếu muốn *@
+                    @* <div class="auth-buttons-simple">
+                        <a href="~/Account/Login" class="btn btn-outline-modern btn-sm">Đăng nhập</a>
+                        <a href="~/Account/Register" class="btn btn-primary-modern btn-sm">Đăng ký</a>
+                    </div> *@
+                }
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+    /* --- Kế thừa Variables từ lần trước --- */
+    :root {
+        --primary-blue: #007bff;
+        --primary-blue-dark: #0056b3;
+        --text-dark: #343a40;
+        --text-light: #f8f9fa;
+        --text-secondary: #6c757d;
+        --border-color: #dee2e6;
+        --header-bg: #ffffff;
+        --header-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow nhẹ hơn */
+        --dropdown-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        --link-hover-bg: #f1f1f1;
+        --search-bg: #f0f0f0; /* Màu nền thanh search */
+        --search-border-radius: 20px; /* Bo góc thanh search */
+    }
+
+    /* --- Base Header Styling --- */
+    .main-header-search-focus {
+        background-color: var(--header-bg);
+        padding: 10px 0; /* Padding dọc cho header */
+        color: var(--text-dark);
+        box-shadow: var(--header-shadow);
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    /* --- Header Content Wrapper --- */
+    .header-content-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px; /* Khoảng cách giữa các khu vực chính */
+        min-height: 50px; /* Chiều cao tối thiểu */
+    }
+
+    /* --- Logo --- */
+    .header-logo {
+        font-weight: bold;
+        font-size: 28px; /* Kích thước logo */
+        color: var(--primary-blue);
+        text-decoration: none;
+        flex-shrink: 0; /* Không co lại khi không đủ chỗ */
+        /* Thay thế bằng style cho thẻ img nếu dùng logo ảnh */
+    }
+
+        .header-logo:hover {
+            color: var(--primary-blue-dark);
+        }
+
+    /* --- Search Bar --- */
+    .search-bar-container {
+        flex-grow: 1; /* Chiếm phần lớn không gian */
+        max-width: 600px; /* Giới hạn chiều rộng tối đa (tùy chọn) */
+        margin: 0 auto; /* Căn giữa nếu có max-width */
+    }
+
+    .search-form {
+        display: flex;
+        align-items: center;
+        background-color: var(--search-bg);
+        border-radius: var(--search-border-radius);
+        padding: 0px 5px 0px 15px; /* Padding bên trong thanh search */
+        border: 1px solid transparent; /* Border ẩn, hiện khi focus */
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .search-form:focus-within { /* Style khi input bên trong được focus */
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            background-color: white; /* Đổi nền khi focus */
+        }
+
+
+    .search-input {
+        flex-grow: 1;
+        border: none;
+        background: transparent;
+        outline: none;
+        padding: 10px 10px 10px 0; /* Padding cho input */
+        font-size: 14px;
+        color: var(--text-dark);
+    }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+    .search-button {
+        background: none;
+        border: none;
+        padding: 8px; /* Padding nút search */
+        margin-right: 5px; /* Khoảng cách nhỏ với input */
+        cursor: pointer;
+        color: var(--text-secondary);
+        font-size: 16px; /* Kích thước icon search */
+        line-height: 1;
+    }
+
+    .search-form:focus-within .search-button {
+        color: var(--primary-blue); /* Đổi màu icon khi focus */
+    }
+
+
+    /* --- Header Actions --- */
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 25px; /* Khoảng cách giữa Giỏ hàng và Tài khoản */
+        flex-shrink: 0; /* Không co lại */
+    }
+
+    .action-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: var(--text-dark);
+        font-size: 14px; /* Cỡ chữ cho text "Giỏ hàng", "Tài khoản" */
+        padding: 5px; /* Thêm padding nhỏ để dễ bấm */
+        border-radius: 4px;
+        transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+        .action-link i {
+            font-size: 22px; /* Kích thước icon */
+            line-height: 1;
+            color: var(--text-secondary); /* Màu icon hơi nhạt */
+            transition: color 0.2s ease;
+        }
+
+        .action-link span {
+            /* Không cần style đặc biệt nếu chỉ là text */
+        }
+
+        .action-link:hover {
+            color: var(--primary-blue);
+            background-color: var(--link-hover-bg); /* Hiệu ứng hover nhẹ */
+            text-decoration: none;
+        }
+
+            .action-link:hover i {
+                color: var(--primary-blue); /* Icon cũng đổi màu khi hover */
+            }
+
+    /* --- Dropdown Anpassungen --- */
+    /* Wrapper để đảm bảo action-link không bị ảnh hưởng bởi style dropdown gốc */
+    .action-link-wrapper .dropdown-toggle-modern {
+        padding: 5px; /* Reset padding của dropdown toggle để giống action-link */
+    }
+
+        .action-link-wrapper .dropdown-toggle-modern:hover {
+            background-color: var(--link-hover-bg); /* Giữ hover effect */
+        }
+
+    /* Caret icon nhỏ hơn (tùy chọn) */
+    .dropdown-caret-small {
+        font-size: 10px;
+        margin-left: 2px;
+    }
+
+    /* Style cho dropdown menu giữ nguyên từ lần trước */
+    .dropdown-menu {
+        border: 1px solid var(--border-color);
+        box-shadow: var(--dropdown-shadow);
+        border-radius: 5px;
+        padding: 0;
+        margin-top: 8px !important;
+        min-width: 250px;
+    }
+
+    .user-header-modern { /* Giữ nguyên */
+        background-color: var(--primary-blue);
+        color: var(--text-light);
+        text-align: center;
+        padding: 15px;
+    }
+
+        .user-header-modern .user-avatar {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        .user-header-modern p {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+
+    /* Optional: Body cho profile/order history link */
+    .user-body-modern {
+        padding: 10px 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .btn-flat-modern {
+        background-color: transparent;
+        color: var(--text-dark);
+        padding: 8px 0; /* Chỉ cần padding dọc */
+        text-align: left;
+        width: 100%;
+        border: none;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 3px;
+    }
+
+        .btn-flat-modern:hover {
+            background-color: var(--link-hover-bg);
+            color: var(--primary-blue);
+        }
+
+        .btn-flat-modern i {
+            width: 18px; /* Đảm bảo icon thẳng hàng */
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .btn-flat-modern:hover i {
+            color: var(--primary-blue);
+        }
+
+
+    .user-footer-modern { /* Giữ nguyên */
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        background-color: #f9f9f9;
+        border-top: 1px solid var(--border-color); /* Đảm bảo có border top */
+    }
+    /* Nút trong footer dropdown */
+    .btn-outline-modern { /* Giữ nguyên */
+        color: var(--primary-blue);
+        border-color: var(--primary-blue);
+        background-color: transparent;
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+        .btn-outline-modern:hover {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-outline-modern i {
+            font-size: 14px;
+        }
+
+
+    /* --- Responsive --- */
+    @@media (max-width: 991px) { /* Tablet */
+        .header-content-wrapper {
+            gap: 15px; /* Giảm khoảng cách */
+        }
+
+        .search-bar-container {
+            max-width: 450px; /* Giảm max-width */
+        }
+
+        .header-actions {
+            gap: 15px; /* Giảm khoảng cách actions */
+        }
+
+        .action-link span {
+            /* Có thể ẩn chữ đi chỉ để lại icon */
+            /* display: none; */
+        }
+    }
+
+    @@media (max-width: 767px) { /* Mobile */
+        .main-header-search-focus {
+            padding: 8px 0;
+        }
+
+        .header-content-wrapper {
+            flex-wrap: wrap; /* Cho phép xuống dòng */
+            gap: 10px;
+            justify-content: center; /* Căn giữa khi wrap */
+        }
+
+        .header-logo {
+            /* Logo và Actions có thể chiếm 1 dòng */
+            width: auto;
+            margin-bottom: 10px;
+        }
+
+        .header-actions {
+            /* Đặt actions ở cuối dòng đầu tiên hoặc dòng riêng */
+            order: 3; /* Đẩy xuống cuối nếu cần */
+            width: auto; /* Cho phép co lại */
+            margin-bottom: 10px;
+        }
+
+        .search-bar-container {
+            /* Search bar chiếm dòng riêng, full width */
+            order: 2; /* Nằm giữa logo/actions và nội dung khác */
+            width: 100%;
+            max-width: none; /* Bỏ max-width */
+            margin: 0; /* Bỏ margin auto */
+        }
+
+        .search-form {
+            padding: 0 5px 0 10px;
+        }
+
+        .search-input {
+            padding: 8px 8px 8px 0;
+        }
+        /* Ẩn text trên mobile nếu muốn */
+        .action-link span {
+            display: none;
+        }
+
+        .action-link i {
+            font-size: 24px; /* Icon lớn hơn chút khi chỉ có icon */
+        }
+
+        .header-actions {
+            gap: 20px;
+        }
+        /* Tăng gap khi chỉ có icon */
+    }
+</style>

@@ -1,0 +1,63 @@
+﻿@model SV21T1020578.DomainModels.Product
+@{
+    ViewBag.Title = "Xóa mặt hàng";
+}
+
+<div class="box box-primary">
+
+    <div class="box-body">
+        <form class="form-horizontal" action="#" method="post">
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Tên mặt hàng:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.ProductName</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Mô tả:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.ProductDescription</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Đơn vị tính:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Unit</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Giá hàng:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Price</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <img id="Photo" src="~/images/products/nophoto.png" class="img img-bordered" style="width:200px" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    @if (!SV21T1020578.BusinessLayers.CommonDataService.SupplierDB.InUsed(Model.SupplierID))
+                    {
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                            Xóa dữ liệu
+                        </button>
+                    }
+                    <a class="btn btn-default" href="~/Product">
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</div>

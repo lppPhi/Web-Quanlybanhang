@@ -1,0 +1,79 @@
+﻿@model SV21T1020578.Admin.Models.OrderSearchOutput
+@{
+    Layout = null;
+}
+
+<p style="margin:10px 0 10px 0">
+    Có <strong>@Model.RowCount</strong> đơn hàng trong tổng số <strong>@Model.PageCount</strong> trang
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr class="bg-primary">
+                <th>Khách hàng</th>
+                <th>Ngày lập</th>
+                <th>Nhân viên phụ trách</th>
+                <th>Thời điểm duyệt</th>
+                <th>Người giao hàng</th>
+                <th>Ngày nhận giao hàng</th>
+                <th>Thời điểm kết thúc</th>
+                <th>Trạng thái</th>
+                <th style="width:40px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Data)
+            {
+                <tr>
+                    <td>@item.CustomerName</td>
+                    <td>
+                        @string.Format(new System.Globalization.CultureInfo("en-GB"),
+                                 "{0:dd/MM/yyyy HH:mm}",
+                                 item.OrderTime)
+                    </td>
+                    <td>@item.EmployeeName</td>
+                    <td>
+                        @string.Format(new System.Globalization.CultureInfo("en-GB"),
+                                 "{0:dd/MM/yyyy HH:mm}",
+                                 item.AcceptTime)
+                    </td>
+                    <td>@item.ShipperName</td>
+                    <td>
+                        @string.Format(new System.Globalization.CultureInfo("en-GB"),
+                                 "{0:dd/MM/yyyy HH:mm}",
+                                 item.ShippedTime)
+                    </td>
+                    <td>
+                        @string.Format(new System.Globalization.CultureInfo("en-GB"),
+                                 "{0:dd/MM/yyyy HH:mm}",
+                                 item.FinishedTime)
+                    </td>
+                    <td>@item.StatusDescription</td>
+                    <td>
+                        <a href="~/Order/Details/@item.OrderID" class="btn btn-info btn-xs">
+                            <i class="glyphicon glyphicon-th-list"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center">
+    <ul class="pagination">
+        @for (int p = 1; p <= Model.PageCount; p++)
+        {
+            if (p == Model.Page)
+            {
+                <li class="active"><a href="#">@p</a></li>
+            }
+            else
+            {
+                <li><a href="javascript:;" onclick="paginationSearch(@p)">@p</a></li>
+            }
+        }
+
+    </ul>
+</div>

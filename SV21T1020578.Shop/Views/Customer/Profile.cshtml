@@ -1,0 +1,47 @@
+﻿@model SV21T1020578.DomainModels.Customer
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+}
+<div class="box box-primary" style="border: 1px solid #ccc; padding: 20px; max-width: 600px; margin: 0 auto;">
+    <h2 class="text-center"><i class="fa fa-user-circle"></i> Thông tin cá nhân</h2>
+    <div class="box-body">
+        <div class="form-group">
+            <label><i class="fa fa-user"></i> Tên khách hàng:</label>
+            <input type="text" class="form-control" value="@Model.CustomerName" readonly>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fa fa-address-card"></i> Tên giao dịch:</label>
+            <input type="text" class="form-control" value="@Model.ContactName" readonly>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fa fa-phone"></i> Điện thoại:</label>
+            <input type="text" class="form-control" value="@Model.Phone" readonly>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fa fa-envelope"></i> Email:</label>
+            <input type="text" class="form-control" value="@Model.Email" readonly>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fa fa-map-marker"></i> Địa chỉ:</label>
+            <input type="text" class="form-control" value="@Model.Address" readonly>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fa fa-map-pin"></i> Tỉnh/thành:</label>
+            <input type="text" class="form-control" value="@Model.Province" readonly>
+        </div>
+
+        <div class="form-group text-right">
+            <a href="@Url.Action("Edit", "Customer")" class="btn btn-outline-success">
+                <i class="fa fa-edit"></i> Cập nhật thông tin
+            </a>
+            <a href="~/Home" class="btn btn-outline-success">
+            <i class="fa fa-shopping-cart"></i> Quay lại mua sắm
+            </a>
+        </div>
+    </div>
+</div>

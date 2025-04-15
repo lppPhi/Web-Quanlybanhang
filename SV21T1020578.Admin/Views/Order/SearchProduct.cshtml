@@ -1,0 +1,105 @@
+﻿@model ProductSearchOutput
+@{
+    Layout = null;
+}
+@foreach (var item in Model.Data)
+{
+    <form class="frmAddToCart" action="~/Order/AddToCart" method="post"
+          style="background-color:#fff; border:1px solid #ccc; margin:5px 0px 5px 0px; padding:5px;">
+
+        <input type="hidden" name="ProductID" value="@item.ProductID" />
+        <input type="hidden" name="ProductName" value="@item.ProductName" />
+        <input type="hidden" name="Photo" value="@item.Photo" />
+        <input type="hidden" name="Unit" value="@item.Unit" />
+
+        <div class="row">
+            <div class="col-md-12">
+                <strong>@item.ProductName</strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">
+                <img class="img img-responsive img-bordered" src="~/images/products/@item.Photo" alt="NoPhoto">
+            </div>
+            <div class="col-sm-9">
+                <div class="form-group-sm">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <label>Giá bán:</label>
+                            <input class="form-control number-separator" type="text" value="@item.Price.ToString("N0")" name="SalePrice" />
+                        </div>
+                        <div class="col-md-5">
+                            <label>Số lượng:</label>
+                            <input class="form-control" type="number" value="1" min="1" name="Quantity" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group-sm" style="margin-top:2px;">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+
+@if (Model.PageCount > 1)
+{
+    <ul class="pager">
+        @if (Model.Page > 1)
+        {
+            <li class="previous">
+                <a href="javascript:;" onclick="doSearch(@(Model.Page - 1))">
+                    <i class="fa fa-backward"></i>
+                </a>
+            </li>
+        }
+        <li>
+            <span>Trang @Model.Page/@Model.PageCount</span>
+        </li>
+        @if (Model.Page < Model.PageCount)
+        {
+            <li class="next">
+                <a href="javascript:;" onclick="doSearch(@(Model.Page + 1))">
+                    <i class="fa fa-forward"></i>
+                </a>
+            </li>
+        }
+    </ul>
+}
+
+<script>
+    $(document).ready(function () {
+        $(".number-separator").inputmask({
+            alias: "numeric",
+            groupSeparator: ",",
+            autoGroup: true,
+            digits: 0,
+            rightAlign: false,
+            removeMaskOnSubmit: true
+        });
+        $(".frmAddToCart").submit(function (e) {
+            e.preventDefault();
+
+            var url = $(this).prop("action");
+            var method = $(this).prop("method");
+            var data = $(this).serializeArray();
+
+            $.ajax({
+                url: url,
+                type: method,
+                data: data,
+                success: function (result) {
+                    if (result !== "") {
+                        alert(result);
+                    }
+                    else {
+                        showShoppingCart();
+                    }
+                }
+            });
+        })
+    })
+</script>

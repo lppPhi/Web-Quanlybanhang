@@ -1,0 +1,88 @@
+﻿@model OrderSearchInput
+@{
+    ViewBag.Title = "Lịch sử đơn hàng";
+}
+
+<div class="">
+    <h2 class="text-center ">Lịch sử đơn hàng</h2>
+    <div class="box-body">
+        <!-- Form đầu vào tìm kiếm -->
+        <form id="frmSearchInput" action="~/Order/Search" method="get">
+            <input type="hidden" name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+
+            <!-- Container có border và kích thước nhỏ -->
+            <div style="border: 1px solid #ccc; padding: 20px; max-width: 1200px; margin: 0 auto;background-color:#fff;">
+                <div class="row container-fluid">
+                    <div class="col-sm-3">
+                        <select class="form-control" name="@nameof(Model.Status)">
+                            @foreach (var status in ViewBag.StatusList)
+                            {
+                                if (status.Key == Model.Status)
+                                {
+                                    <option value="@status.Key" selected>
+                                        @status.Value
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@status.Key">
+                                        @status.Value
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" name="@nameof(Model.TimeRange)"
+                               value="@Model.TimeRange" class="form-control daterange-picker" placeholder="" />
+                    </div>
+                    <div class="col-sm-6 input-group">
+                        <input type="text" name="@nameof(Model.SearchValue)"
+                               value="@Model.SearchValue"
+                               class="form-control"
+                               placeholder="Tìm kiếm theo tên người giao hàng">
+                        <span class="input-group-btn">
+                            <button type="submit" id="search-btn" class="btn btn-flat btn-info">
+                                <i class="fa fa-search"></i> Tìm kiếm
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="searchResult">
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        function doSearch(page) {
+            var searchCondition = $("#frmSearchInput").serializeArray();
+            searchCondition.push({ name: "page", value: page });
+
+            var action = $("#frmSearchInput").prop("action");
+            var method = $("#frmSearchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: searchCondition,
+                success: function (data) {
+                    $("#searchResult").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            doSearch(@Model.Page);
+            $("#frmSearchInput").submit(function (e) {
+                e.preventDefault();
+                doSearch(1);
+            });
+        });
+
+    </script>
+}

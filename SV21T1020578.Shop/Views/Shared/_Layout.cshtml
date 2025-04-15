@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Capi Shop</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SV21T1020065.Shop.styles.css" asp-append-version="true" />
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="~/themes/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/themes/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="~/themes/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/themes/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="~/themes/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="~/themes/bower_components/select2/dist/css/select2.min.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/themes/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="~/themes/dist/css/skins/_all-skins.min.css">
+</head>
+    <body class="hold-transition skin-blue sidebar-mini">
+        <!-- Site wrapper -->
+        <div class="wrapper">
+
+            @{
+                await Html.RenderPartialAsync("_Header");
+            }
+
+
+            <div class="content-wrapper" style="margin-left:0;">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+@*                     <h1>
+                        @ViewBag.Title
+                    </h1> *@
+
+                </section>
+
+                <!-- Main content -->
+                <section class="content">
+                    @RenderBody()
+                </section>
+                <!-- /.content -->
+            </div>
+
+            @{
+                await Html.RenderPartialAsync("_Footer");
+                //await Html.RenderPartialAsync("_ControlSideBar");
+            }
+        </div>
+        <!-- ./wrapper -->
+        <!-- jQuery 3 -->
+        <script src="~/themes/bower_components/jquery/dist/jquery.min.js"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="~/themes/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- SlimScroll -->
+        <script src="~/themes/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <!-- FastClick -->
+        <script src="~/themes/bower_components/fastclick/lib/fastclick.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js"></script>
+        <script src="~/themes/bower_components/moment/min/moment.min.js"></script>
+        <script src="~/themes/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <script src="~/themes/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script src="~/themes/bower_components//select2/dist/js/select2.min.js"></script>
+
+        <!-- AdminLTE App -->
+        <script src="~/themes/dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="~/themes/dist/js/demo.js"></script>
+        <script>
+            $(function () {
+                $('.daterange-picker').daterangepicker({
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+                $('.select2').select2({ width: "100%" });
+                $('.pagination .disabled a, .pagination .active a').on('click', function (e) {
+                    e.preventDefault();
+                });
+
+                $('.datemask').inputmask('dd/mm/yyyy', { 'placeholder': '__/__/____' });
+                $('.number-separator').inputmask({
+                    alias: "numeric",
+                    groupSeparator: ",",       // Dấu phẩy phân cách phần nghìn
+                    autoGroup: true,           // Tự động thêm dấu phân cách
+                    digits: 0,                 // Không có chữ số thập phân
+                    rightAlign: false,
+                    removeMaskOnSubmit: true   // Loại bỏ ký tự phân cách phần nghìn khi submit form
+                });
+                $('[data-mask]').inputmask();
+            });
+
+            function doSearch(page) {
+                const frmSearchInput = $("#frmSearchInput");
+
+                $('html').scrollTop(0);
+
+                $("#searchResult").html(`
+                           <div class="d-flex align-items-center justify-content-center m-5">
+                              <span class="spinner-grow text-primary mr-3" role="status"></span>
+                            <span class="text-primary">Loading...</span>
+                                 </div>
+                                `);
+
+                let searchCondition = frmSearchInput.serializeArray();
+                searchCondition.push({ name: "page", value: page });
+
+                const action = frmSearchInput.prop("action");
+                const method = frmSearchInput.prop("method");
+
+                setTimeout(() => {
+                    $.ajax({
+                        url: action,
+                        type: method,
+                        data: searchCondition,
+                    })
+                        .done((data) => $("#searchResult").html(data));
+                }, 200);
+            }
+        </script>
+        @RenderSection("scripts", false)
+    </body>
+</html>

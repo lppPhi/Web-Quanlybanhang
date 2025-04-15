@@ -1,0 +1,87 @@
+﻿@model IEnumerable<CartItem>
+@{
+    Layout = null;
+    int stt = 0;
+    decimal sumOfPrice = 0;
+}
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr class="bg-primary">
+            <th class="text-center">STT</th>
+            <th class="text-center">Tên hàng</th>
+            <th class="text-center">ĐVT</th>
+            <th class="text-center">Số lượng</th>
+            <th class="text-center">Giá</th>
+            <th class="text-center">Thành tiền</th>
+            <th style="width:40px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                sumOfPrice += item.TotalPrice;
+
+                <tr>
+                    <td class="text-center">@(++stt)</td>
+                    <td>@item.ProductName</td>
+                    <td class="text-center">@item.Unit</td>
+                    <td class="text-center">@item.Quantity</td>
+                    <td class="text-right">@item.SalePrice.ToString("N0")</td>
+                    <td class="text-right">@item.TotalPrice.ToString("N0")</td>
+                    <td class="text-right">
+                        <a href="~/Order/RemoveFromCart/@item.ProductID"
+                           class="btn btn-xs btn-danger ajax-link"
+                           onclick="return confirm('Xóa mặt hàng @item.ProductName ra khỏi giỏ hàng?')">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">
+                    <p>Giỏ hàng trống</p>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="5" class="text-right">Tổng cộng:</th>
+            <th class="text-right">@sumOfPrice.ToString("N0")</th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="text-right">
+    <a href="~/Order/ClearCart" class="btn btn-sm btn-danger ajax-link" onclick="return confirm('Có muốn xóa giỏ hàng không?')">
+        <i class="fa fa-trash"></i> Xóa giỏ hàng
+    </a>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".ajax-link").click(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: $(this).prop("href"),
+                type: "GET",
+                success: function (data) {
+                    if (data !== "") {
+                        alert(data);
+                    }
+                    else {
+                        showShoppingCart();
+                    }
+                }
+            });
+        });
+    });
+</script>

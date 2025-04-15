@@ -1,0 +1,141 @@
+﻿@model ProductSearchInput
+@{
+    ViewBag.Title = "Lập đơn hàng";
+    int rowCount;
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+
+        <!-- Tìm kiếm, hiển thị và chọn hàng đưa vào giỏ -->
+        <div class="col-md-4">
+            <!-- Form tìm kiếm mặt hàng -->
+            <h4>Lựa chọn hàng cần bán</h4>
+            <form id="frmSearchInput" action="~/Order/SearchProduct" method="get">
+                <input type="hidden" name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Nhập tên mặt hàng cần tìm"
+                           name="@nameof(Model.SearchValue)" value="@Model.SearchValue">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-flat btn-info">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <div id="searchResult">
+            </div>
+        </div>
+
+        <!-- Thông tin giỏ hàng, khách hàng -->
+        <div class="col-md-8">
+            <!-- Giỏ hàng -->
+            <h4>Danh sách mặt hàng đã chọn</h4>
+            <div id="shoppingCart" class="table-responsive">
+            </div>
+
+            <!-- Nhập khách hàng, nhân viên phụ trách và khởi tạo đơn hàng -->
+            <form id="frmOrderInit" action="~/Order/Init" method="post" class="form-horizontal">
+                <h4>Thông tin về khách hàng và địa chỉ giao hàng</h4>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Khách hàng:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control select2" name="customerID">
+                            <option value="0">-- Chọn khách hàng --</option>
+                            @foreach (var customer in SV21T1020578.BusinessLayers.CommonDataService.CustomerDB.List())
+                            {
+                                <option value="@customer.CustomerId">@customer.CustomerName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Tỉnh/thành:</label>
+                    <div class="col-sm-10">
+                        @Html.DropDownList("deliveryProvince", SelectListHeper.Provinces(), new { @class = "form-control select2" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Địa chỉ nhận hàng:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="deliveryAddress" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-offset-2 col-sm-10">
+                        <span id="error-message" style="color:#f00"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fa fa-plus-circle"></i> Lập đơn hàng
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            doSearch(@Model.Page);
+            showShoppingCart();
+
+            $("#frmSearchInput").submit(function (e) {
+                e.preventDefault();
+                doSearch(1);
+            });
+
+            $("#frmOrderInit").submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).prop("action"),
+                    type: $(this).prop("method"),
+                    data: $(this).serializeArray(),
+
+                    success: function (result) {
+                        if (isNaN(result)) {
+                            $("#error-message").html(result);
+                        } else {
+                            window.location.href = "Details/" + result;
+                        }
+                    }
+                });
+                return;
+            });
+        })
+
+        function doSearch(page) {
+            var searchCondition = $("#frmSearchInput").serializeArray();
+            searchCondition.push({ name: "page", value: page });
+
+            var action = $("#frmSearchInput").prop("action");
+            var method = $("#frmSearchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: searchCondition,
+                success: function (data) {
+                    $("#searchResult").html(data);
+                }
+            });
+        }
+
+        function showShoppingCart() {
+            $.ajax({
+                url: "ShoppingCart",
+                type: 'GET',
+                success: function (data) {
+                    $('#shoppingCart').html(data);
+                }
+            });
+        }
+
+
+    </script>
+}

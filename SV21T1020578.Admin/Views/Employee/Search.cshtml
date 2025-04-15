@@ -1,0 +1,63 @@
+﻿@model PaginationSearchOutput<SV21T1020578.DomainModels.Employee>
+@{
+    Layout = null;
+}
+<p style="margin-top:10px">
+            Có <strong>@Model.RowCount</strong> nhân viên trong tổng số <strong>@Model.PageCount</strong> trang.
+        </p>
+        <div class="row">
+    @foreach (var item in Model.Data)
+    {
+                    <div class="col-sm-4">
+                        <div class="box box-info">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">@item.FullName</h3>
+                                <div class="box-tools pull-right">
+                                    <a class="btn btn-box-tool" href="~/Employee/Edit/@item.EmployeeID">
+                                        <i class="fa fa-edit text-primary"></i>
+                                    </a>
+                                    <a class="btn btn-box-tool" href="~/Employee/Delete/@item.EmployeeID">
+                                        <i class="fa fa-trash text-danger"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <img class="profile-user-img img-responsive img-bordered" src="~/images/employees/@item.Photo">
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <ul class="list-group list-group-unbordered">
+                                            <li class="list-group-item">
+                                                <i class="fa fa-birthday-cake"></i> @item.BirthDate
+                                            </li>
+                                            <li class="list-group-item">
+                                                <i class="fa fa-phone"></i> @item.Phone
+                                            </li>
+                                            <li class="list-group-item">
+                                                <i class="fa fa-envelope"></i> @item.Email
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    }
+        </div>
+
+        <div class="text-center">
+            <ul class="pagination">
+        @for (int p = 1; p <= Model.PageCount; p++)
+        {
+            if (p == Model.Page)
+            {
+                                <li class="active"><a href="#">@p</a></li>
+            }
+            else
+            {
+                <li><a href="javascript:;" onclick="paginationSearch(@p)">@p</a></li>
+            }
+        }
+            </ul>
+        </div>

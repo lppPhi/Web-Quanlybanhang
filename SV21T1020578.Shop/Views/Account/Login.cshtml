@@ -1,0 +1,215 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Capi Shop - Đăng nhập Hiện đại</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome 5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Google Font (Roboto là lựa chọn tốt) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff; /* Màu chủ đạo */
+            --primary-hover-color: #0056b3;
+            --gradient-start: #74EBD5; /* Màu gradient mới */
+            --gradient-end: #9FACE6;
+            --input-focus-border: #80bdff;
+            --input-focus-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Shadow mềm mại hơn */
+            --border-radius: 0.5rem; /* Bo góc lớn hơn một chút */
+        }
+
+        body {
+            /* Gradient nền mới, mượt mà hơn */
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            font-family: 'Roboto', sans-serif;
+            display: flex; /* Sử dụng flex để căn giữa dễ dàng */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Đảm bảo body chiếm toàn bộ chiều cao */
+            padding: 15px; /* Thêm padding phòng trường hợp màn hình nhỏ */
+        }
+
+        .login-card {
+            max-width: 420px; /* Tăng nhẹ độ rộng */
+            width: 100%; /* Đảm bảo chiếm full width trên màn hình nhỏ */
+            background: #fff;
+            padding: 40px 30px; /* Tăng padding */
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden; /* Đảm bảo không có gì tràn ra ngoài */
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px; /* Tăng khoảng cách */
+        }
+
+            .login-header .logo-icon { /* Thêm icon logo nếu muốn */
+                font-size: 40px;
+                color: var(--primary-color);
+                margin-bottom: 15px;
+                display: block; /* Hiển thị trên dòng riêng */
+            }
+
+            .login-header h1 {
+                font-size: 2rem; /* Kích thước tiêu đề lớn hơn */
+                color: #333;
+                font-weight: 700; /* Đậm hơn */
+                margin-bottom: 5px;
+            }
+
+            .login-header p {
+                color: #6c757d; /* Màu text-muted của Bootstrap */
+                font-size: 0.95rem;
+            }
+
+        /* Cải thiện Input với Icons */
+        .input-group {
+            margin-bottom: 1.25rem; /* Khoảng cách giữa các input group */
+        }
+
+        .form-control {
+            height: calc(1.5em + 1rem + 2px); /* Cao hơn một chút */
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius) !important; /* Ghi đè border-radius mặc định */
+            border: 1px solid #ced4da;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        /* Loại bỏ border-radius trái/phải khi có icon */
+        .input-group .form-control:not(:last-child) {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        .input-group .form-control:not(:first-child) {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+        }
+
+        .input-group .input-group-text {
+            border-radius: var(--border-radius) !important;
+        }
+
+        .input-group .input-group-prepend .input-group-text {
+            border-right: 0;
+            background-color: #e9ecef;
+        }
+        /* Nền nhẹ cho icon */
+
+
+        .form-control:focus {
+            border-color: var(--input-focus-border);
+            box-shadow: var(--input-focus-shadow);
+            /* Không cần outline khi đã có box-shadow đẹp */
+            outline: 0;
+        }
+
+        .input-group-text {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius); /* Đồng bộ bo góc */
+            width: 45px; /* Chiều rộng cố định cho icon */
+            justify-content: center; /* Căn giữa icon */
+            color: #495057;
+        }
+
+        /* Nút bấm */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.65rem 1rem; /* Nút to hơn */
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            margin-top: 10px; /* Khoảng cách với validation message */
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-hover-color);
+                border-color: var(--primary-hover-color);
+            }
+
+        /* Validation Message */
+        .text-danger {
+            display: block; /* Hiển thị trên dòng riêng */
+            margin-top: 5px; /* Khoảng cách nhỏ với input phía trên nếu lỗi */
+            margin-bottom: 15px; /* Khoảng cách với nút bấm */
+            font-size: 0.875rem;
+            text-align: center; /* Căn giữa thông báo lỗi chung */
+        }
+
+        /* Link Đăng ký */
+        .register-link {
+            text-align: center;
+            margin-top: 25px; /* Khoảng cách với nút */
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+            .register-link a {
+                color: var(--primary-color);
+                text-decoration: none;
+                font-weight: 500;
+                transition: color 0.2s ease;
+            }
+
+                .register-link a:hover {
+                    color: var(--primary-hover-color);
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <!-- Tùy chọn: Thêm icon ở đây nếu muốn -->
+            <!-- <span class="logo-icon"><i class="fas fa-store"></i></span> -->
+            <h1>Đăng nhập</h1>
+            <p>Truy cập vào tài khoản Capi Shop của bạn</p>
+        </div>
+
+        <form action="~/Account/Login" method="post" novalidate>
+            @* Thêm novalidate để tắt validation mặc định của trình duyệt nếu muốn dùng validation phía server hoàn toàn *@
+            @Html.AntiForgeryToken()
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                </div>
+                @* Sử dụng Input Tag Helper nếu dùng ASP.NET Core >= 2.0 sẽ gọn hơn, nhưng giữ nguyên input thường cho tương thích *@
+                <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập hoặc Email" required autofocus>
+            </div>
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                </div>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
+            </div>
+
+            @* Hiển thị thông báo lỗi chung ở đây *@
+            @Html.ValidationMessage("Error", new { @class = "text-danger" })
+
+            <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+        </form>
+
+        <div class="register-link">
+            Chưa có tài khoản? <a href="~/Account/Register">Đăng ký ngay</a>
+        </div>
+    </div>
+
+    <!-- jQuery (cần cho Bootstrap 4 JS) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 4 JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> @* Dùng bundle để có Popper.js *@
+</body>
+</html>

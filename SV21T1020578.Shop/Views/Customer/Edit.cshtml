@@ -1,0 +1,70 @@
+﻿@model SV21T1020578.DomainModels.Customer
+@{
+    ViewBag.Title = "Đổi thông tin cá nhân";
+}
+<div class="box box-primary" style="border: 1px solid #ccc; padding: 20px; max-width: 600px; margin: 0 auto;">
+    <h2 class="text-center"><i class="fa fa-edit"></i> Cập nhật thông tin cá nhân</h2>
+    <div class="box-body">
+        <form action="@Url.Action("Save", "Customer")" method="post">
+            <input type="hidden" name="CustomerID" value="@Model.CustomerId">
+
+            <div class="form-group">
+                <label for="CustomerName"><i class="fa fa-user"></i> Tên khách hàng:</label>
+                <input type="text" class="form-control" name="CustomerName" value="@Model.CustomerName" />
+                @Html.ValidationMessage(nameof(Model.CustomerName), "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="ContactName"><i class="fa fa-address-card"></i> Tên giao dịch:</label>
+                <input type="text" class="form-control" name="ContactName" value="@Model.ContactName" />
+                @Html.ValidationMessage(nameof(Model.ContactName), "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Phone"><i class="fa fa-phone"></i> Điện thoại:</label>
+                <input type="text" class="form-control" name="Phone" value="@Model.Phone" />
+                @Html.ValidationMessage(nameof(Model.Phone), "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Email"><i class="fa fa-envelope"></i> Email:</label>
+                <input type="email" class="form-control" name="Email" value="@Model.Email" />
+                @Html.ValidationMessage(nameof(Model.Email), "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Address"><i class="fa fa-map-marker"></i> Địa chỉ:</label>
+                <input type="text" class="form-control" name="Address" value="@Model.Address" />
+                @Html.ValidationMessage(nameof(Model.Address), "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label for="Province"><i class="fa fa-map-pin"></i> Tỉnh/thành:</label>
+                <select class="form-control select2" name="Province">
+                    <option value="">---Chọn Tỉnh/thành---</option>
+                    @foreach (var item in SV21T1020578.BusinessLayers.CommonDataService.ProvinceDB.List())
+                    {
+                        if (item.ProvinceName == Model.Province)
+                        {
+                            <option value="@item.ProvinceName" selected>@item.ProvinceName</option>
+                        }
+                        else
+                        {
+                            <option value="@item.ProvinceName">@item.ProvinceName</option>
+                        }
+                    }
+                </select>
+                @Html.ValidationMessage(nameof(Model.Province), "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-floppy-o"></i> Lưu dữ liệu
+                </button>
+                <a href="@Url.Action("Profile", "Customer")" class="btn btn-default">
+                    <i class="fa fa-undo"></i> Quay lại
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

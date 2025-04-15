@@ -1,0 +1,35 @@
+﻿@model SV21T1020578.DomainModels.Category
+@{
+
+}
+<div class="box box-danger">
+    <div class="box-body">
+        <form action="~/Category/Delete/@Model.CategoryID" method="post">
+            <div class="form-group">
+                <label>Tên loại hàng:</label>
+                <p class="form-control-static">@Model.CategoryName</p>
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả:</label>
+                <p class="form-control-static">@Model.Description</p>
+            </div>
+
+            <div class="form-group text-right">
+                @if (!SV21T1020578.BusinessLayers.CommonDataService.CategoryDB.InUsed(Model.CategoryID))
+                {
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                        Xóa dữ liệu
+                    </button>
+                }
+                <a href="~/Category" class="btn btn-default">
+                    Quay lại
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+

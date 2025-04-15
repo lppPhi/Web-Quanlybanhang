@@ -1,0 +1,273 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+}
+
+<div class="container my-4">
+    <div class="row">
+        <!-- Sidebar Column -->
+        <aside class="col-lg-3 col-md-4">
+            <div class="sidebar-filters p-3 rounded border" style="background-color:#f8f9fa;">
+                @* Nền màu xám nhạt cho sidebar *@
+
+                <h5 class="filter-title mb-3">Danh mục sản phẩm</h5>
+
+                <form action="~/Home/Search" method="get" id="frmSearchInput">
+                    @* Input ẩn vẫn giữ nguyên *@
+                    <input type="hidden" name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+
+                    <div class="filter-group mb-3">
+                        <label for="category-select">Loại hàng:</label>
+                        <select id="category-select" class="form-control form-control-sm" name="@nameof(Model.CategoryID)">
+                            <option value="">Tất cả loại hàng</option>
+                            @foreach (var item in SV21T1020578.BusinessLayers.CommonDataService.CategoryDB.List())
+                            {
+                                <option value="@item.CategoryID" selected="@(item.CategoryID == Model.CategoryID)">
+                                    @item.CategoryName
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="filter-group mb-3">
+                        <label for="supplier-select">Nhà cung cấp:</label>
+                        <select id="supplier-select" class="form-control form-control-sm" name="@nameof(Model.SupplierID)">
+                            <option value="">Tất cả nhà cung cấp</option>
+                            @foreach (var item in SV21T1020578.BusinessLayers.CommonDataService.SupplierDB.List())
+                            {
+                                <option value="@item.SupplierID" selected="@(item.SupplierID == Model.SupplierID)">
+                                    @item.SupplierName
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="filter-group mb-3">
+                        <label>Khoảng giá:</label>
+                        <div class="price-range-inputs d-flex align-items-center">
+                            <input type="text" class="form-control form-control-sm number-separator tooltip-price me-2" name="@nameof(Model.MinPrice)" value="@Model.MinPrice" min="0" placeholder="Từ" aria-label="Giá từ">
+                            <span>-</span>
+                            <input type="text" class="form-control form-control-sm number-separator tooltip-price ms-2" name="@nameof(Model.MaxPrice)" value="@Model.MaxPrice" min="0" placeholder="Đến" aria-label="Giá đến">
+                        </div>
+                    </div>
+
+                    <div class="filter-group mb-4">
+                        <label for="search-value-input">Tên mặt hàng:</label>
+                        <input id="search-value-input" name="@nameof(Model.SearchValue)" type="text" class="form-control form-control-sm" placeholder="Nhập tên..." value="@Model.SearchValue" />
+                    </div>
+
+                    <button class="btn btn-primary btn-block w-100" type="submit">
+                        @* Sử dụng btn-primary cho nổi bật *@
+                        <i class="fa fa-search"></i> Tìm kiếm
+                    </button>
+                </form>
+
+                <hr class="my-4">
+
+                @* --- Phần KẾT NỐI VỚI NSHOP (Ví dụ) --- *@
+                <div class="sidebar-section mb-4">
+                    <h6 class="section-title mb-3">KẾT NỐI VỚI NSHOP</h6>
+                    <ul class="list-unstyled sidebar-links">
+                        <li><a href="#" class="d-flex align-items-center"><i class="fab fa-facebook-square me-2"></i> Linh kiện điện tử Capi Shop</a></li>
+                        <li><a href="#" class="d-flex align-items-center"><i class="fa fa-users me-2"></i> Hội đam mê cơ điện tử</a></li>
+                        <li><a href="#" class="d-flex align-items-center"><i class="fab fa-youtube me-2"></i> Kênh Youtube của Capi Shop</a></li>
+                    </ul>
+                </div>
+
+                @* --- Phần KHÁC (Ví dụ) --- *@
+                <div class="sidebar-section">
+                    <h6 class="section-title mb-3">KHÁC</h6>
+                    <ul class="list-unstyled sidebar-links">
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Hướng dẫn thanh toán</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- Main Content Column -->
+        <main class="col-lg-9 col-md-8">
+            @* Kết quả tìm kiếm sẽ được load vào đây *@
+            <div id="searchResult">
+                @* Có thể thêm hiệu ứng loading ở đây *@
+                <div class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Đang tải sản phẩm...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+<style>
+    /* --- Biến màu cơ bản (Giữ nguyên nếu có) --- */
+    :root {
+        --primary-blue: #007bff;
+        --primary-blue-dark: #0056b3;
+        --text-dark: #343a40;
+        --text-light: #f8f9fa;
+        --text-secondary: #6c757d;
+        --border-color: #dee2e6;
+        /* ... */
+    }
+
+    /* --- Style chính cho Sidebar --- */
+    .sidebar-filters {
+        position: sticky;
+        top: 80px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        background-color: #f8f9fa !important;
+        padding: 25px !important; /* Tăng thêm padding */
+        border: 1px solid var(--border-color, #dee2e6);
+        border-radius: 0.3rem;
+    }
+
+        /* --- Tiêu đề trong Sidebar (Danh mục, Kết nối, Khác) --- */
+        .sidebar-filters .filter-title,
+        .sidebar-filters .section-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            /* >>> KÍCH CỠ CHỮ TIÊU ĐỀ <<< */
+            font-size: 1.6rem; /* Lớn hơn đáng kể */
+            border-bottom: 1px solid var(--border-color, #dee2e6);
+            padding-bottom: 12px; /* Tăng padding dưới */
+            margin-bottom: 25px !important; /* Tăng khoảng cách dưới */
+        }
+
+        /* --- Nhóm Filter --- */
+        .sidebar-filters .filter-group {
+            margin-bottom: 25px !important; /* Tăng khoảng cách nhóm */
+        }
+
+            /* --- Nhãn (Label) cho các ô input/select --- */
+            .sidebar-filters .filter-group label {
+                font-weight: 500;
+                /* >>> KÍCH CỠ CHỮ LABEL <<< */
+                font-size: 1.3rem; /* Lớn hơn */
+                margin-bottom: 10px; /* Khoảng cách dưới label */
+                display: block;
+                color: #495057; /* Màu đậm hơn chút */
+            }
+
+        /* --- Input, Select trong Sidebar --- */
+        .sidebar-filters .form-control {
+            /* >>> KÍCH CỠ CHỮ VÀ PADDING INPUT/SELECT <<< */
+            font-size: 1.25rem !important; /* Áp dụng kích thước lớn */
+            padding: 0.75rem 1rem !important; /* Tăng padding đáng kể */
+            height: auto !important; /* Chiều cao tự động */
+            line-height: 1.5 !important; /* Đảm bảo chiều cao dòng phù hợp */
+        }
+        /* Ghi đè cho form-control-sm nếu vẫn còn trong HTML */
+        .sidebar-filters .form-control-sm {
+            font-size: 1.25rem !important;
+            padding: 0.75rem 1rem !important;
+            height: auto !important;
+            line-height: 1.5 !important;
+        }
+
+
+        /* --- Khoảng giá --- */
+        .sidebar-filters .price-range-inputs span {
+            padding: 0 10px; /* Tăng khoảng cách dấu gạch ngang */
+            /* >>> KÍCH CỠ CHỮ DẤU GẠCH NGANG <<< */
+            font-size: 1.3rem;
+            color: var(--text-secondary, #6c757d);
+            align-self: center; /* Căn giữa theo chiều dọc */
+        }
+
+        /* --- Nút "Áp dụng bộ lọc" --- */
+        .sidebar-filters .btn-primary {
+            /* >>> KÍCH CỠ CHỮ VÀ PADDING NÚT <<< */
+            font-size: 1.4rem; /* Chữ nút lớn */
+            padding: 0.8rem 1.5rem; /* Padding nút lớn hơn */
+            width: 100%;
+        }
+
+            .sidebar-filters .btn-primary i {
+                /* Đảm bảo icon không quá nhỏ so với text */
+                font-size: 1.3rem;
+                margin-right: 8px; /* Khoảng cách icon và text */
+            }
+
+        /* --- Link trong Sidebar (Kết nối, Khác) --- */
+        .sidebar-filters .sidebar-links li {
+            margin-bottom: 15px; /* Tăng khoảng cách link */
+        }
+
+        .sidebar-filters .sidebar-links a {
+            color: var(--text-secondary, #6c757d);
+            text-decoration: none;
+            /* >>> KÍCH CỠ CHỮ LINK <<< */
+            font-size: 1.25rem; /* Tăng cỡ chữ */
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Tăng khoảng cách icon và text */
+        }
+
+            .sidebar-filters .sidebar-links a:hover {
+                color: var(--primary-blue, #007bff);
+                text-decoration: none;
+            }
+
+            /* --- Icon trong Link --- */
+            .sidebar-filters .sidebar-links a i {
+                width: 22px; /* Rộng hơn chút */
+                text-align: center;
+                /* >>> KÍCH CỠ ICON TRONG LINK <<< */
+                font-size: 1.4em; /* Icon lớn hơn */
+                color: var(--primary-blue, #007bff);
+            }
+
+    /* --- Responsive (Giữ nguyên) --- */
+    @@media (max-width: 767px) {
+        .sidebar-filters {
+            position: relative;
+            top: auto;
+            max-height: none;
+            margin-bottom: 25px; /* Tăng khoảng cách dưới trên mobile */
+        }
+        /* Có thể thêm điều chỉnh font size nhỏ lại trên mobile nếu cần */
+        /*
+                .sidebar-filters .filter-title, .sidebar-filters .section-title { font-size: 1.4rem; }
+                .sidebar-filters .filter-group label { font-size: 1.15rem; }
+                .sidebar-filters .form-control { font-size: 1.1rem !important; padding: 0.6rem 0.8rem !important; }
+                .sidebar-filters .btn-primary { font-size: 1.2rem; padding: 0.7rem 1.2rem; }
+                .sidebar-filters .sidebar-links a { font-size: 1.1rem; }
+                */
+    }
+</style>
+
+
+@section scripts {
+    <script>
+        function doSearch(page) {
+            var searchCondition = $("#frmSearchInput").serializeArray();
+            searchCondition.push({ name: "page", value: page });
+
+            var action = $("#frmSearchInput").prop("action");
+            var method = $("#frmSearchInput").prop("method");
+
+            $.ajax({
+                url: action,
+                type: method,
+                data: searchCondition,
+                success: function (data) {
+                    $("#searchResult").html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            doSearch(@Model.Page);
+            $("#frmSearchInput").submit(function (e) {
+                e.preventDefault();
+                doSearch(1);
+            });
+        });
+    </script>
+}

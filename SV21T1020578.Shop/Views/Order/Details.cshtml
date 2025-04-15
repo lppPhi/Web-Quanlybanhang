@@ -1,0 +1,664 @@
+﻿@model OrderDetailModel
+@using SV21T1020578.DomainModels
+@using SV21T1020578.Shop
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+<style>
+    :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --warning-color: #ffc107;
+        --info-color: #17a2b8;
+        --light-color: #f8f9fa;
+        --dark-color: #343a40;
+        --border-color: #dee2e6;
+        --background-color: #ffffff;
+        --text-color: #212529;
+        --hover-bg-color: #f1f3f5;
+        --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        --border-radius: 8px;
+    }
+
+    body {
+        background-color: #f4f7fc;
+    }
+
+    .order-detail-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--background-color);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .order-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+    .order-actions .btn-modern {
+        margin-left: 10px;
+    }
+
+    .order-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+        .order-section:last-of-type {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .order-section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px 25px;
+    }
+
+    .info-item {
+        margin-bottom: 5px; /* Reduced spacing */
+    }
+
+        .info-item.full-width {
+            grid-column: 1 / -1; /* Span full width */
+        }
+
+
+    .info-label {
+        display: block;
+        font-weight: 500;
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: var(--dark-color);
+        padding: 8px 12px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        border: 1px solid var(--border-color);
+        min-height: 38px; /* Match button/input heights roughly */
+        display: flex;
+        align-items: center;
+        word-break: break-word;
+    }
+
+        .info-value.empty {
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+
+    .products-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .products-table th,
+        .products-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .products-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .products-table td {
+            font-size: 0.95rem;
+        }
+
+        .products-table tbody tr:hover {
+            background-color: var(--hover-bg-color);
+        }
+
+        .products-table .text-center {
+            text-align: center;
+        }
+
+        .products-table .text-right {
+            text-align: right;
+        }
+
+        .products-table .number {
+            font-family: monospace;
+        }
+        /* Optional: for numbers */
+
+        .products-table tfoot th {
+            font-weight: bold;
+            font-size: 1.1rem;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .products-table tfoot td {
+            font-weight: bold;
+            font-size: 1.1rem;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border-top: 2px solid var(--primary-color);
+        }
+
+
+        .products-table .action-cell {
+            width: 110px;
+            text-align: center;
+        }
+
+            .products-table .action-cell .btn-modern {
+                padding: 5px 8px;
+                font-size: 0.8rem;
+                margin: 0 2px;
+            }
+
+                .products-table .action-cell .btn-modern i {
+                    font-size: 0.9rem; /* Adjust icon size in smaller buttons */
+                    margin-right: 0; /* Remove text gap if only icon */
+                }
+
+            .products-table .action-cell .btn-disabled {
+                cursor: not-allowed !important;
+                opacity: 0.6;
+            }
+
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-radius: var(--border-radius);
+        color: white;
+        text-align: center;
+    }
+
+    .status-init {
+        background-color: var(--warning-color);
+        color: var(--dark-color);
+    }
+
+    .status-accepted {
+        background-color: var(--info-color);
+    }
+
+    .status-shipping {
+        background-color: #fd7e14;
+    }
+    /* Orange for shipping */
+    .status-finished {
+        background-color: var(--success-color);
+    }
+
+    .status-cancel {
+        background-color: var(--secondary-color);
+    }
+
+    .status-rejected {
+        background-color: var(--danger-color);
+    }
+
+    .status-unknown {
+        background-color: var(--dark-color);
+    }
+
+
+    .btn-modern {
+        padding: 8px 18px;
+        border-radius: var(--border-radius);
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 1.5;
+    }
+
+    .btn-primary-modern {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+        .btn-primary-modern:hover {
+            background-color: #0056b3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+    .btn-secondary-modern {
+        background-color: var(--secondary-color);
+        color: white;
+    }
+
+        .btn-secondary-modern:hover {
+            background-color: #5a6268;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+    .btn-danger-modern {
+        background-color: var(--danger-color);
+        color: white;
+    }
+
+        .btn-danger-modern:hover {
+            background-color: #c82333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+    .btn-info-modern {
+        background-color: var(--info-color);
+        color: white;
+    }
+
+        .btn-info-modern:hover {
+            background-color: #138496;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+    .btn-disabled {
+        background-color: #e9ecef;
+        color: #6c757d;
+        cursor: not-allowed;
+        pointer-events: none; /* Disable clicks */
+        border-color: #ced4da;
+    }
+
+    /* Modal styling */
+    #dialogModal .modal-content {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    #dialogModal .modal-header {
+        background-color: var(--primary-color);
+        color: white;
+        border-top-left-radius: var(--border-radius);
+        border-top-right-radius: var(--border-radius);
+        border-bottom: none;
+        padding: 1rem 1.5rem;
+    }
+
+        #dialogModal .modal-header .close {
+            color: white;
+            opacity: 0.8;
+            text-shadow: none;
+        }
+
+            #dialogModal .modal-header .close:hover {
+                opacity: 1;
+            }
+
+    #dialogModal .modal-body {
+        padding: 1.5rem;
+    }
+
+    #dialogModal .modal-footer {
+        background-color: var(--light-color);
+        border-bottom-left-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem 1.5rem;
+    }
+
+    /* Responsive */
+    @@media (max-width: 767px) {
+        .order-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+            .order-header h2 {
+                font-size: 1.5rem;
+            }
+
+        .order-actions {
+            width: 100%;
+            text-align: right;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr; /* Stack grid items */
+            gap: 10px;
+        }
+
+        .order-section h3 {
+            font-size: 1.2rem;
+        }
+
+        .products-table th, .products-table td {
+            padding: 8px 10px;
+            font-size: 0.9rem;
+        }
+
+        .products-table .action-cell {
+            width: 90px; /* Adjust action cell width */
+        }
+
+            .products-table .action-cell .btn-modern {
+                margin: 0 1px;
+            }
+    }
+
+    .order-detail-container {
+        font-size: 1.8rem; /* Tăng kích thước font chữ cơ sở lên 2.5 lần */
+        line-height: 1.3; /* Tăng chiều cao dòng để dễ đọc hơn với font lớn */
+    }
+
+        /* Điều chỉnh lại một số kích thước tương đối nếu cần */
+        .order-detail-container h2 {
+            font-size: 1.8em; /* Dùng em để tỉ lệ với font cơ sở mới */
+        }
+
+        .order-detail-container h3 {
+            font-size: 1.4em; /* Dùng em để tỉ lệ với font cơ sở mới */
+        }
+
+    .info-label {
+        font-size: 0.9em; /* Dùng em để tỉ lệ với font cơ sở mới */
+    }
+
+    .info-value {
+        font-size: 1em; /* Dùng em để tỉ lệ với font cơ sở mới */
+        min-height: 1.6em; /* Điều chỉnh chiều cao tối thiểu */
+        padding: 0.5em 0.75em;
+    }
+
+    .status-badge {
+        font-size: 0.9em; /* Dùng em để tỉ lệ với font cơ sở mới */
+        padding: 0.3em 0.75em;
+    }
+
+    .products-table th {
+        font-size: 1em; /* Dùng em để tỉ lệ với font cơ sở mới */
+        padding: 0.75em 1em;
+    }
+
+    .products-table td {
+        font-size: 0.95em; /* Dùng em để tỉ lệ với font cơ sở mới */
+        padding: 0.75em 1em;
+    }
+
+    .products-table tfoot th,
+    .products-table tfoot td {
+        font-size: 1.1em; /* Dùng em để tỉ lệ với font cơ sở mới */
+    }
+
+    /* Điều chỉnh kích thước nút và icon */
+    .btn-modern {
+        font-size: 0.95em; /* Dùng em để tỉ lệ với font cơ sở mới */
+        padding: 0.5em 1.1em;
+        gap: 0.4em;
+    }
+
+        .btn-modern i {
+            font-size: 1.1em; /* Tăng kích thước icon tương ứng */
+        }
+
+    .products-table .action-cell .btn-modern {
+        font-size: 0.8em; /* Điều chỉnh lại cho nút nhỏ trong bảng */
+        padding: 0.4em 0.6em;
+    }
+
+        .products-table .action-cell .btn-modern i {
+            font-size: 1em; /* Điều chỉnh lại icon trong nút nhỏ */
+        }
+
+    /* Responsive adjustments might need further tweaking */
+    @@media (max-width: 767px) {
+        .order-detail-container h2 {
+            font-size: 1.5em;
+        }
+
+        .order-detail-container h3 {
+            font-size: 1.2em;
+        }
+
+        .products-table th, .products-table td {
+            font-size: 0.9em;
+            padding: 0.5em 0.6em;
+        }
+    }
+</style>
+
+<div class="order-detail-container">
+    <div class="order-header">
+        <h2>Chi tiết đơn hàng</h2>
+        <div class="order-actions">
+            @if (Model.Order.Status != Constants.ORDER_FINISHED &&
+            Model.Order.Status != Constants.ORDER_ACCEPTED &&
+            Model.Order.Status != Constants.ORDER_CANCEL &&
+            Model.Order.Status != Constants.ORDER_REJECTED &&
+            Model.Order.Status != Constants.ORDER_SHIPPING)
+            {
+                <a href="~/Order/Cancel/@Model.Order.OrderID" class="btn-modern btn-danger-modern" onclick="return confirm('Xác nhận hủy đơn hàng này?')">
+                    <i class="fas fa-times-circle"></i> Hủy đơn hàng
+                </a>
+            }
+            <a href="~/Order" class="btn-modern btn-info-modern">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h3>Thông tin chung</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Mã đơn hàng:</span>
+                <div class="info-value">@Model.Order?.OrderID</div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Ngày lập đơn hàng:</span>
+                <div class="info-value">@(Model.Order?.OrderTime.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Ngày chấp nhận:</span>
+                <div class="info-value @(Model.Order?.AcceptTime == null ? "empty" : "")">@(Model.Order?.AcceptTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa chấp nhận")</div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Trạng thái:</span>
+                @{
+                    string statusClass = "status-unknown";
+                    switch (Model.Order.Status)
+                    {
+                        case Constants.ORDER_INIT: statusClass = "status-init"; break;
+                        case Constants.ORDER_ACCEPTED: statusClass = "status-accepted"; break;
+                        case Constants.ORDER_SHIPPING: statusClass = "status-shipping"; break;
+                        case Constants.ORDER_FINISHED: statusClass = "status-finished"; break;
+                        case Constants.ORDER_CANCEL: statusClass = "status-cancel"; break;
+                        case Constants.ORDER_REJECTED: statusClass = "status-rejected"; break;
+                    }
+                }
+                <div class="info-value">
+                    <span class="status-badge @statusClass">@Model.Order?.StatusDescription</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Thời điểm hoàn tất:</span>
+                <div class="info-value @(Model.Order?.FinishedTime == null ? "empty" : "")">@(Model.Order?.FinishedTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa hoàn tất")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h3>Thông tin khách hàng</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Tên khách hàng:</span>
+                <div class="info-value">@Model.Order?.CustomerName</div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Tên giao dịch:</span>
+                <div class="info-value">@Model.Order?.CustomerContactName</div>
+            </div>
+            <div class="info-item full-width">
+                <span class="info-label">Địa chỉ:</span>
+                <div class="info-value">@Model.Order?.CustomerAddress</div>
+            </div>
+            <div class="info-item full-width">
+                <span class="info-label">Email:</span>
+                <div class="info-value">@Model.Order?.CustomerEmail</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h3>Thông tin giao hàng</h3>
+        <div class="info-grid">
+            <div class="info-item full-width">
+                <span class="info-label">Địa chỉ giao hàng:</span>
+                <div class="info-value">@Model.Order?.DeliveryAddress</div>
+            </div>
+            <div class="info-item full-width">
+                <span class="info-label">Tỉnh/thành:</span>
+                <div class="info-value">@Model.Order?.DeliveryProvince</div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Người giao hàng:</span>
+                <div class="info-value @(string.IsNullOrEmpty(Model.Order?.ShipperName) ? "empty" : "")">@(Model.Order?.ShipperName ?? "Chưa gán")</div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Điện thoại Shipper:</span>
+                <div class="info-value @(string.IsNullOrEmpty(Model.Order?.ShipperPhone) ? "empty" : "")">@(Model.Order?.ShipperPhone ?? "N/A")</div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Nhận giao hàng lúc:</span>
+                <div class="info-value @(Model.Order?.ShippedTime == null ? "empty" : "")">@(Model.Order?.ShippedTime?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa giao hàng")</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="order-section">
+        <h3>Chi tiết mặt hàng</h3>
+        <div class="table-responsive">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width:60px;">STT</th>
+                        <th>Tên hàng</th>
+                        <th class="text-center" style="width:80px;">ĐVT</th>
+                        <th class="text-center" style="width:100px;">Số lượng</th>
+                        <th class="text-right" style="width:120px;">Giá</th>
+                        <th class="text-right" style="width:140px;">Thành tiền</th>
+                        <th class="action-cell">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int stt = 0;
+                    }
+                    @foreach (var item in Model.Details)
+                    {
+                        stt++;
+                        <tr>
+                            <td class="text-center">@stt</td>
+                            <td>@item.ProductName</td>
+                            <td class="text-center">@item.Unit</td>
+                            <td class="text-center">@item.Quantity</td>
+                            <td class="text-right number">@item.SalePrice.ToString("N0")</td>
+                            <td class="text-right number">@item.TotalPrice.ToString("N0")</td>
+                            <td class="action-cell">
+                                @if (Model.Order.Status == Constants.ORDER_INIT)
+                                {
+                                    <a href="~/Order/EditDetail/@item.OrderID?productId=@item.ProductID"
+                                       class="btn-modern btn-primary-modern btn-modal" title="Sửa mặt hàng">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="~/Order/DeleteDetail/@item.OrderID?productId=@item.ProductID"
+                                       class="btn-modern btn-danger-modern" onclick="return confirm('Xóa mặt hàng này khỏi đơn hàng?')" title="Xóa mặt hàng">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript:;" class="btn-modern btn-primary-modern btn-disabled"
+                                       title="Chỉ được sửa khi đơn hàng đang ở trạng thái chờ duyệt">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="javascript:;" class="btn-modern btn-danger-modern btn-disabled"
+                                       title="Chỉ được xoá khi đơn hàng đang ở trạng thái chờ duyệt">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5" class="text-right">Tổng cộng:</th>
+                        <td class="text-right number">@Model.Details.Sum(d => d.TotalPrice).ToString("N0")</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="dialogModal" class="modal fade" role="dialog" aria-hidden="true">
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".btn-modal").click(function (e) {
+                e.preventDefault();
+                var link = $(this).prop("href");
+                $("#dialogModal").html('');
+                $("#dialogModal").load(link, function () {
+                    $(this).modal('show');
+                });
+            });
+
+            $('#dialogModal').on('hidden.bs.modal', function () {
+                 $(this).html('');
+            });
+        });
+    </script>
+}

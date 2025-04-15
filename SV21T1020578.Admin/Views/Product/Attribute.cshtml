@@ -1,0 +1,53 @@
+﻿@model SV21T1020578.DomainModels.ProductAttribute
+@{
+
+}
+
+
+<div class="box box-primary">
+    <div class="box-body">
+        <form class="form-horizontal" method="post" enctype="multipart/form-data" action="~/Product/SaveAttribute">
+
+            <input type="hidden" name="ProductID" value="@Model.ProductID" />
+            <input type="hidden" name="AttributeID" value="@Model.AttributeID" />
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Tên thuộc tính:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="@nameof(Model.AttributeName)" value="@Model.AttributeName" class="form-control" />
+                    @Html.ValidationMessageFor(m => m.AttributeName)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Giá trị:</label>
+                <div class="col-sm-10">
+                    <input type="text" name="@nameof(Model.AttributeValue)" value="@Model.AttributeValue" class="form-control" />
+                    @Html.ValidationMessageFor(m => m.AttributeValue)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Thứ tự hiển thị:</label>
+                <div class="col-sm-10">
+                    <input type="number" name="@nameof(Model.DisplayOrder)" value="@Model.DisplayOrder" class="form-control" />
+                    @Html.ValidationMessageFor(m => m.DisplayOrder)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-floppy-o"></i>
+                        Lưu dữ liệu
+                    </button>
+                    <a href="~/Product/Edit/@Model.ProductID" class="btn btn-default">
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
